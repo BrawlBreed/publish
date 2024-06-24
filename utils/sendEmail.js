@@ -1,0 +1,28 @@
+const nodeMailer = require("nodemailer");
+const dotenv = require("dotenv");
+dotenv.config({ path: "config.env" });
+// options are pass as arg from userController
+const sendEmail = async (options) => {
+    const transporter = nodeMailer.createTransport({
+          //Simple Mail Transfer Protocol (SMTP) (write any thing but that make sense. its env fi)
+        host: process.env.SMTP_HOST, // "smtp.gmail.com"
+        port: process.env.SMTP_PORT,  // 465,
+        // service: process.env.SMTP_SERVICE, // gmail
+        auth: {
+            // this our email and pass wich one we use for sending mail
+            user: process.env.SMTP_MAIL,
+            pass: process.env.SMTP_PASSWORD,
+        },
+    });
+
+
+    const mailOptions = {
+        from: process.env.SMTP_MAIL,
+        to: options.email,
+        subject: options.subject,
+        html: options.html 
+    };
+
+    await transporter.sendMail(mailOptions);
+}
+module.exports = sendEmail;
